@@ -22,11 +22,11 @@ struct APILoader<T : APIHandler> {
             urlSession.dataTask(with: urlRequest) { data, response, err in
                 if let response = response as? HTTPURLResponse {
                     if let err = err {
-                        completionHandler(nil, ServiceError(httpsStaus: response.statusCode, errorMessage: err.localizedDescription))
+                        completionHandler(nil, ServiceError(httpsStatus: response.statusCode, errorMessage: err.localizedDescription))
                         return
                     }
                     guard let data = data else {
-                        completionHandler(nil , ServiceError(httpsStaus: response.statusCode, errorMessage: "data came back as nil"))
+                        completionHandler(nil , ServiceError(httpsStatus: response.statusCode, errorMessage: "data came back as nil"))
                         return
                     }
                     do {
@@ -35,7 +35,7 @@ struct APILoader<T : APIHandler> {
                         return
                     }
                     catch let err {
-                        completionHandler(nil , ServiceError(httpsStaus: response.statusCode, errorMessage: "Failed to decode data , Error : \(err.localizedDescription)"))
+                        completionHandler(nil , ServiceError(httpsStatus: response.statusCode, errorMessage: "Failed to decode data , Error : \(err.localizedDescription)"))
                         return
                     }
                 }

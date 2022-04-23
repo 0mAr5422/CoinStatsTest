@@ -19,11 +19,11 @@ extension ResponseHandler {
                 return body
             }
             else {
-                throw ServiceError(httpsStaus: response.statusCode, errorMessage: "response code not 200")
+                throw ServiceError(httpsStatus: response.statusCode, errorMessage: "response code not 200")
             }
         }
         catch let err {
-            throw ServiceError(httpsStaus: response.statusCode, errorMessage: "Error with decoding , Error Message : \(err.localizedDescription)")
+            throw ServiceError(httpsStatus: response.statusCode, errorMessage: "Error with decoding , Error Message : \(err.localizedDescription)")
         }
     }
     
