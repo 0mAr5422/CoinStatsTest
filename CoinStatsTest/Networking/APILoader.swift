@@ -39,7 +39,7 @@ struct APILoader<T : APIHandler> {
                         return
                     }
                 }
-            }
+            }.resume()
         }
     }
 }

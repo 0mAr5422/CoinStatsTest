@@ -19,11 +19,16 @@ extension ResponseHandler {
                 return body
             }
             else {
-                throw ServiceError(httpsStatus: response.statusCode, errorMessage: "response code not 200")
+                let serviceErr = ServiceError(httpsStatus: response.statusCode, errorMessage: "response code not 200")
+                print(serviceErr , "In defaultResponse - ResponseHandler+Extensions")
+                throw serviceErr
+                
             }
         }
         catch let err {
-            throw ServiceError(httpsStatus: response.statusCode, errorMessage: "Error with decoding , Error Message : \(err.localizedDescription)")
+            let serviceErr = ServiceError(httpsStatus: response.statusCode, errorMessage: "Error with decoding , Error Message : \(err)")
+            print(serviceErr , "In defaultResponse - ResponseHandler+Extensions")
+            throw serviceErr
         }
     }
     
