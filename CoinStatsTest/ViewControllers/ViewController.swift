@@ -11,7 +11,21 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        let feedViewModel = FeedViewModel()
+        view.backgroundColor = .blue
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            feedViewModel.performDataFetch(with: [:]) { model, err in
+            if let _ = err {
+                print(err)
+                return
+            }
+            else {
+                print(model)
+            }
+            }
+        }
+        
     }
 
 

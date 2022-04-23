@@ -24,6 +24,7 @@
 		26DD783728143FBC007747CB /* FeedResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD783628143FBC007747CB /* FeedResponseModel.swift */; };
 		26DD78392814432A007747CB /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD78382814432A007747CB /* GalleryItem.swift */; };
 		26DD783B2814433E007747CB /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD783A2814433E007747CB /* VideoItem.swift */; };
+		26DD783D281445F6007747CB /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD783C281445F6007747CB /* FeedViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		26DD783628143FBC007747CB /* FeedResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedResponseModel.swift; sourceTree = "<group>"; };
 		26DD78382814432A007747CB /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
 		26DD783A2814433E007747CB /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
+		26DD783C281445F6007747CB /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 		26DD7823281434A0007747CB /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				26DD783C281445F6007747CB /* FeedViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				26DD780E2814346A007747CB /* ViewController.swift in Sources */,
 				26DD782E28143850007747CB /* APILoader.swift in Sources */,
 				26DD783128143CE8007747CB /* APIPath.swift in Sources */,
+				26DD783D281445F6007747CB /* FeedViewModel.swift in Sources */,
 				26DD780A2814346A007747CB /* AppDelegate.swift in Sources */,
 				26DD780C2814346A007747CB /* SceneDelegate.swift in Sources */,
 				26DD782C281437B8007747CB /* ServiceError.swift in Sources */,

@@ -13,8 +13,9 @@ extension RequestHandler {
         
         var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
         
-        urlComponents?.queryItems = params.map{parameter in URLQueryItem(name: parameter.key, value: String(describing:parameter.value))}
-        
+        if params.isEmpty == false {
+            urlComponents?.queryItems = params.map{parameter in URLQueryItem(name: parameter.key, value: String(describing:parameter.value))}
+        }
         guard let finalUrl = urlComponents?.url else {return nil}
         return finalUrl
         

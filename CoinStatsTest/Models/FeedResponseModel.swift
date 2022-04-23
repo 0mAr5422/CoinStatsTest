@@ -26,9 +26,9 @@ struct FeedArticle : Codable {
     let body : String
     let shareURL : String
     let coverPhotoURL : String
-    let date : Date
-    let imagesGallery : [GalleryItem?]
-    let videoGallery : [VideoItem?]
+    let date : Double
+    let imagesGallery : [GalleryItem]?
+    let videoGallery : [VideoItem]?
     
     enum CodingKeys : String , CodingKey {
         case category
