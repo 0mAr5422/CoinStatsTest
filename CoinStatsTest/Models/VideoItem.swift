@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct VideoItem : Codable {
+struct VideoItem : Codable , Hashable {
+    let identifier = UUID()
     let title : String
     let thumbnailURL : String
     let youtubeID : String

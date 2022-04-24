@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2673C6622814A08D00305F4F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2673C6612814A08D00305F4F /* Extensions.swift */; };
 		26DD780A2814346A007747CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD78092814346A007747CB /* AppDelegate.swift */; };
 		26DD780C2814346A007747CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD780B2814346A007747CB /* SceneDelegate.swift */; };
-		26DD780E2814346A007747CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD780D2814346A007747CB /* ViewController.swift */; };
+		26DD780E2814346A007747CB /* ArticlesFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD780D2814346A007747CB /* ArticlesFeedViewController.swift */; };
 		26DD78112814346A007747CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26DD780F2814346A007747CB /* Main.storyboard */; };
 		26DD78132814346B007747CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26DD78122814346B007747CB /* Assets.xcassets */; };
 		26DD78162814346B007747CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26DD78142814346B007747CB /* LaunchScreen.storyboard */; };
@@ -25,13 +26,18 @@
 		26DD78392814432A007747CB /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD78382814432A007747CB /* GalleryItem.swift */; };
 		26DD783B2814433E007747CB /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD783A2814433E007747CB /* VideoItem.swift */; };
 		26DD783D281445F6007747CB /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD783C281445F6007747CB /* FeedViewModel.swift */; };
+		26DD783F2814589C007747CB /* RootSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD783E2814589C007747CB /* RootSplitViewController.swift */; };
+		26DD784128145C58007747CB /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD784028145C58007747CB /* Helpers.swift */; };
+		26DD784328145C99007747CB /* FeedArticleSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD784228145C99007747CB /* FeedArticleSections.swift */; };
+		26DD784728145E04007747CB /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DD784628145E04007747CB /* ArticleCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2673C6612814A08D00305F4F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		26DD78062814346A007747CB /* CoinStatsTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoinStatsTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26DD78092814346A007747CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		26DD780B2814346A007747CB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		26DD780D2814346A007747CB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		26DD780D2814346A007747CB /* ArticlesFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesFeedViewController.swift; sourceTree = "<group>"; };
 		26DD78102814346A007747CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		26DD78122814346B007747CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26DD78152814346B007747CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -48,6 +54,10 @@
 		26DD78382814432A007747CB /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
 		26DD783A2814433E007747CB /* VideoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		26DD783C281445F6007747CB /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
+		26DD783E2814589C007747CB /* RootSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSplitViewController.swift; sourceTree = "<group>"; };
+		26DD784028145C58007747CB /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		26DD784228145C99007747CB /* FeedArticleSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedArticleSections.swift; sourceTree = "<group>"; };
+		26DD784628145E04007747CB /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +90,7 @@
 		26DD78082814346A007747CB /* CoinStatsTest */ = {
 			isa = PBXGroup;
 			children = (
+				26DD784428145DE1007747CB /* UIElements */,
 				26DD782F28143CD3007747CB /* Common */,
 				26DD7824281434A5007747CB /* Helpers */,
 				26DD7823281434A0007747CB /* ViewModels */,
@@ -107,7 +118,8 @@
 		26DD781E2814347B007747CB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				26DD780D2814346A007747CB /* ViewController.swift */,
+				26DD780D2814346A007747CB /* ArticlesFeedViewController.swift */,
+				26DD783E2814589C007747CB /* RootSplitViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -161,6 +173,8 @@
 		26DD7824281434A5007747CB /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				26DD784028145C58007747CB /* Helpers.swift */,
+				2673C6612814A08D00305F4F /* Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -171,8 +185,25 @@
 				26DD782B281437B8007747CB /* ServiceError.swift */,
 				26DD783028143CE8007747CB /* APIPath.swift */,
 				26DD783428143E75007747CB /* HTTPMethods.swift */,
+				26DD784228145C99007747CB /* FeedArticleSections.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		26DD784428145DE1007747CB /* UIElements */ = {
+			isa = PBXGroup;
+			children = (
+				26DD784528145DF2007747CB /* CollectionViewCells */,
+			);
+			path = UIElements;
+			sourceTree = "<group>";
+		};
+		26DD784528145DF2007747CB /* CollectionViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				26DD784628145E04007747CB /* ArticleCollectionViewCell.swift */,
+			);
+			path = CollectionViewCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,15 +279,20 @@
 			files = (
 				26DD782A28143718007747CB /* ResponseHandler+Extensions.swift in Sources */,
 				26DD782828143658007747CB /* RequestHandler+Extensions.swift in Sources */,
-				26DD780E2814346A007747CB /* ViewController.swift in Sources */,
+				26DD780E2814346A007747CB /* ArticlesFeedViewController.swift in Sources */,
 				26DD782E28143850007747CB /* APILoader.swift in Sources */,
 				26DD783128143CE8007747CB /* APIPath.swift in Sources */,
 				26DD783D281445F6007747CB /* FeedViewModel.swift in Sources */,
 				26DD780A2814346A007747CB /* AppDelegate.swift in Sources */,
+				26DD783F2814589C007747CB /* RootSplitViewController.swift in Sources */,
 				26DD780C2814346A007747CB /* SceneDelegate.swift in Sources */,
+				26DD784728145E04007747CB /* ArticleCollectionViewCell.swift in Sources */,
 				26DD782C281437B8007747CB /* ServiceError.swift in Sources */,
+				26DD784328145C99007747CB /* FeedArticleSections.swift in Sources */,
+				26DD784128145C58007747CB /* Helpers.swift in Sources */,
 				26DD783B2814433E007747CB /* VideoItem.swift in Sources */,
 				26DD78262814359D007747CB /* APIHandler.swift in Sources */,
+				2673C6622814A08D00305F4F /* Extensions.swift in Sources */,
 				26DD783328143D14007747CB /* FeedService.swift in Sources */,
 				26DD783728143FBC007747CB /* FeedResponseModel.swift in Sources */,
 				26DD78392814432A007747CB /* GalleryItem.swift in Sources */,
@@ -415,7 +451,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -445,7 +481,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

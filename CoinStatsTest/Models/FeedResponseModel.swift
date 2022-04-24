@@ -20,7 +20,8 @@ struct FeedResponseModel : Codable {
     }
 }
 
-struct FeedArticle : Codable {
+struct FeedArticle : Codable , Hashable {
+    let identifier = UUID()
     let category : String
     let title : String
     let body : String
