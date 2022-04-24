@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct GalleryItem : Codable {
+struct GalleryItem : Codable , Hashable {
+    let identifier = UUID()
     let title : String
     let thumbnailURL : String
     let contentURl : String
