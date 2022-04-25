@@ -12,8 +12,17 @@ final class RootSplitViewController : UISplitViewController  {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         delegate = self
         preferredDisplayMode = .oneBesideSecondary
+        guard let navigationController = viewControllers.first as? UINavigationController else {return}
+        guard let masterViewController = navigationController.viewControllers.first as? ArticlesFeedViewController else {return}
+        guard let detailsNavigationController = viewControllers.last as? UINavigationController else {return}
+        guard let detailsViewController = detailsNavigationController.viewControllers.first as? ArticleDetailsViewController else {return}
+        
+        masterViewController.delegate = detailsViewController
+        detailsViewController.configureViewController()
+        
     }
 }
 

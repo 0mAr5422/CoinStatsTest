@@ -102,3 +102,13 @@ extension UIView {
         }
     
 }
+
+
+//MARK: UIViewController
+
+extension UIViewController {
+    
+    var windowInterfaceOrientation: UIInterfaceOrientation? {
+        return UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+    }
+}

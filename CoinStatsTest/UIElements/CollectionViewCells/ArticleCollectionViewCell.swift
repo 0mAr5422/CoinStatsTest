@@ -34,7 +34,14 @@ extension ArticleCollectionViewCell {
     public func setupCell(with article : FeedArticle) {
         self.titleLabel.text = article.title
         self.categoryLabel.text = article.category
-        self.dateLabel.text = "Released : \(Date(timeIntervalSince1970: article.date))"
+        
+        let date = Date(timeIntervalSince1970: article.date)
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.locale = NSLocale.current
+        dateFormatter.dateFormat = "MMMM dd yyyy"
+        let strDate = dateFormatter.string(from: date)
+        self.dateLabel.text = strDate
         
         DispatchQueue.global(qos: .userInitiated).async {[weak self] in
             guard let self = self else {return}
@@ -55,6 +62,8 @@ extension ArticleCollectionViewCell {
         configureTitleLabel()
         configureDateLabel()
         configureCategoryLabel()
+        
+        
     }
     
     private func configureImageView(){
@@ -83,9 +92,9 @@ extension ArticleCollectionViewCell {
         NSLayoutConstraint.activate([
             
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor , constant: 0) ,
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 5),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor , constant: 10),
             titleLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.28),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5)
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
             
         ])
         titleLabel.textColor = .black
@@ -96,23 +105,43 @@ extension ArticleCollectionViewCell {
         titleLabel.numberOfLines = 0
         
     }
-    
+    private func configureCategoryLabel(){
+        categoryLabel = UILabel()
+        categoryLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(categoryLabel)
+        NSLayoutConstraint.activate([
+            
+            categoryLabel.bottomAnchor.constraint(equalTo: dateLabel.topAnchor , constant: -5) ,
+            categoryLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.3),
+            categoryLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10)
+            
+        ])
+        categoryLabel.textColor = .black
+        categoryLabel.textAlignment = .center
+        categoryLabel.adjustsFontSizeToFitWidth = true
+        categoryLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        categoryLabel.backgroundColor = .systemGray6
+        categoryLabel.clipsToBounds = true
+        
+        categoryLabel.layer.cornerRadius = 5
+    }
     private func configureDateLabel(){
         dateLabel = UILabel()
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dateLabel)
         NSLayoutConstraint.activate([
             
-            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0),
-            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-            dateLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.1)
+            dateLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor , multiplier: 0.1),
+            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
             
         ])
-        dateLabel.textColor = .gray
+        dateLabel.textColor = .black
         dateLabel.textAlignment = .left
         dateLabel.adjustsFontSizeToFitWidth = true
-        dateLabel.font = UIFont.systemFont(ofSize: 16)
+        dateLabel.font = UIFont.systemFont(ofSize: 12)
         
         dateLabel.clipsToBounds = true
         
@@ -120,30 +149,6 @@ extension ArticleCollectionViewCell {
 
     }
     
-    private func configureCategoryLabel(){
-        categoryLabel = UILabel()
-        categoryLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(categoryLabel)
-        NSLayoutConstraint.activate([
-            
-            categoryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor , constant: -5) ,
-            categoryLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.3),
-            categoryLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 5),
-            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5)
-            
-        ])
-        categoryLabel.textColor = .black
-        categoryLabel.textAlignment = .center
-        categoryLabel.adjustsFontSizeToFitWidth = true
-        categoryLabel.font = UIFont.systemFont(ofSize: 16)
-        categoryLabel.backgroundColor = .systemGray6
-        categoryLabel.clipsToBounds = true
-        
-        DispatchQueue.main.async {[weak self] in
-            guard let self = self else {return}
-            self.categoryLabel.layer.cornerRadius = self.categoryLabel.frame.height / 2
-            
-        }
-    }
+    
     
 }

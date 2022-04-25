@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bjM-Zv-843">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
@@ -9,20 +9,21 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Article Details View Controller-->
         <scene sceneID="d7v-kc-g1p">
             <objects>
-                <viewController id="Z3f-pX-xQi" sceneMemberID="viewController">
+                <viewController id="Z3f-pX-xQi" customClass="ArticleDetailsViewController" customModule="CoinStatsTest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bes-nn-0wZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="SO1-0U-xJu"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="xAd-dw-jyM"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b4I-F1-uGE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-17" y="660"/>
+            <point key="canvasLocation" x="736.69064748201447" y="659.7989949748744"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Hfk-AZ-Uan">
@@ -62,15 +63,34 @@
                 <splitViewController id="bjM-Zv-843" customClass="RootSplitViewController" customModule="CoinStatsTest" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="RRU-aZ-04N" kind="relationship" relationship="masterViewController" id="q2z-5R-021"/>
-                        <segue destination="Z3f-pX-xQi" kind="relationship" relationship="detailViewController" id="39g-dn-KIS"/>
+                        <segue destination="rzr-Bd-mK1" kind="relationship" relationship="detailViewController" id="39g-dn-KIS"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6OH-pr-Jh6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-907" y="272"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="8L9-QN-FDN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rzr-Bd-mK1" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" backIndicatorImage="square.and.arrow.up.circle" catalog="system" id="8sB-SS-ayg">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Z3f-pX-xQi" kind="relationship" relationship="rootViewController" id="23m-si-nAb"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="G3c-bR-6yP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-17.266187050359715" y="659.7989949748744"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="square.and.arrow.up.circle" catalog="system" width="128" height="121"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
