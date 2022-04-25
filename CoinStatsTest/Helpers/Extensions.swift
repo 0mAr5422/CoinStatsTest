@@ -11,9 +11,26 @@ import UIKit
 
 //MARK: UIImageView
 extension UIImageView {
+    
+    func enableZoom() {
+      let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(startZooming(_:)))
+      isUserInteractionEnabled = true
+      addGestureRecognizer(pinchGesture)
+    }
+
+    @objc
+    private func startZooming(_ sender: UIPinchGestureRecognizer) {
+      let scaleResult = sender.view?.transform.scaledBy(x: sender.scale, y: sender.scale)
+      guard let scale = scaleResult, scale.a > 1, scale.d > 1 else { return }
+      sender.view?.transform = scale
+      sender.scale = 1
+    }
+    
+    // this function takes a stringURL and uses it to download an image
+    // and uses the returned data to either display a place holder image or the downloaded image itself 
     func setImageFromDownloadURL(from stringURL : String) {
         guard let url = URL(string: stringURL) else {return}
-        
+        DispatchQueue.global(qos: .userInitiated).async {
             self.downloadImage(from: url) {[weak self] data, err in
                 guard let self = self else {return}
                 if let _ = err {
@@ -43,6 +60,8 @@ extension UIImageView {
                     
                 }
             }
+        }
+            
         
         
     }
@@ -110,5 +129,19 @@ extension UIViewController {
     
     var windowInterfaceOrientation: UIInterfaceOrientation? {
         return UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+    }
+}
+
+
+//MARK: Date
+extension Date {
+    func getStringDateFromTimestamp(from timeStamp : Double) -> String {
+        let date = Date(timeIntervalSince1970: timeStamp)
+        let dateFormatter = DateFormatter()
+        
+        
+        dateFormatter.dateFormat = "MMMM dd yyyy"
+        let strDate = dateFormatter.string(from: date)
+        return strDate
     }
 }

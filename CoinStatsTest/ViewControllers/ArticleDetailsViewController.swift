@@ -61,7 +61,7 @@ extension ArticleDetailsViewController : ArticlesFeedViewControllerDelegate {
         self.article = article
         
         // will create a bar button that has only an image and set it's title to the share url so it can be accessed in the Selector
-        let button = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(handleRightBarButtonAction(_:)))
+        let button = UIBarButtonItem(image: UIImage(systemName: "square.on.square"), style: .plain, target: self, action: #selector(handleRightBarButtonAction(_:)))
         button.title = article.shareURL
         button.tintColor = .black
         navigationItem.rightBarButtonItem = button
@@ -72,7 +72,7 @@ extension ArticleDetailsViewController : ArticlesFeedViewControllerDelegate {
             [article.coverPhotoURL , article.category]
         ], toSection: .coverImage)
         snap.appendItems([
-            article.title
+            [article.title , Date().getStringDateFromTimestamp(from: article.date)]
         ], toSection: .title)
         if article.body != "" {
             snap.appendSections([.body])
@@ -145,6 +145,8 @@ extension ArticleDetailsViewController {
             switch sectionIndex {
             case 0 :
                 break
+            case 1 :
+                section.boundarySupplementaryItems = [headerSupplementary]
             case 2 :
                 section.boundarySupplementaryItems = [headerSupplementary]
             case 3 , 4 :
@@ -174,7 +176,7 @@ extension ArticleDetailsViewController {
     
     private func configureDataSource(){
         
-        dataSource = UICollectionViewDiffableDataSource
+        dataSource = DDataSource
             <ArticleDetailsSections, AnyHashable>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: AnyHashable) -> UICollectionViewCell? in
             
@@ -184,10 +186,17 @@ extension ArticleDetailsViewController {
                     guard let item = item as? [String] else {return nil}
                     cell.setupCell(coverURL: item[0], category: item[1])
                     return cell
-                case 1 , 2 :
+                case 1  :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier, for: indexPath) as? TextHolderCollectionViewCell else {return nil}
+                    print(item)
+                    guard let item = item as? [String] else {return nil}
+                    cell.setupCell(with: item[0] , font: UIFont.boldSystemFont(ofSize: 24) )
+                    return cell
+                case 2 :
+                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier, for: indexPath) as? TextHolderCollectionViewCell else {return nil}
+                    
                     guard let item = item as? String else {return nil}
-                    cell.setupCell(with: item , font: indexPath.section == 1 ? UIFont.boldSystemFont(ofSize: 24) : UIFont.systemFont(ofSize: 16) )
+                    cell.setupCell(with: item , font:  UIFont.systemFont(ofSize: 16) )
                     return cell
                 case 3 :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GalleryAndVideoItemCollectionViewCell.reuseIdentifier, for: indexPath) as? GalleryAndVideoItemCollectionViewCell else {return nil}
@@ -207,10 +216,16 @@ extension ArticleDetailsViewController {
         dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
             guard let self = self else {return nil}
             guard let headerItem = self.collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ArticleDetailsSectionHeaderItem.reuseIdentifier, for: index) as? ArticleDetailsSectionHeaderItem else {return nil}
+            
             headerItem.delegate = self
             switch index.section {
-            case 0 , 1:
+            case 0 :
                 return nil
+            case 1 :
+                guard let item = self.dataSource.itemIdentifier(for: index) as? [String] else {return nil}
+                
+                headerItem.setupHeader(title: item[1] , buttonTitle: "")
+                return headerItem
             case 2 :
                 headerItem.setupHeader(title: "Article" , buttonTitle: "Read More")
                 return headerItem
@@ -247,6 +262,18 @@ extension ArticleDetailsViewController : UICollectionViewDelegate {
             cell?.transform = .identity
         }
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 3 {
+            guard let item = dataSource.itemIdentifier(for: indexPath) as? GalleryItem else {return}
+            let vc = ImageAndVideoViewController(with: item.contentURl, videoURL: nil)
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        if indexPath.section == 4 {
+            guard let item = dataSource.itemIdentifier(for: indexPath) as? VideoItem else {return}
+            let vc = ImageAndVideoViewController(with: nil , videoURL: "https://www.youtube.com/embed/" + item.youtubeID)
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 }
 
 // this extension contains the required ArticleDetailsSectionHeaderItemDelegate Methods
@@ -272,7 +299,7 @@ extension ArticleDetailsViewController : ArticleDetailsSectionHeaderItemDelegate
             navigationController?.pushViewController(vc, animated: true)
         case .article :
             let vc = ReadFullArticleViewController(with: self.article.body)
-            vc.title = self.article.title
+            
             navigationController?.pushViewController(vc, animated: true)
             
         }

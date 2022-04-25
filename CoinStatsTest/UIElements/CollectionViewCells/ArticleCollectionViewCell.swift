@@ -35,18 +35,12 @@ extension ArticleCollectionViewCell {
         self.titleLabel.text = article.title
         self.categoryLabel.text = article.category
         
-        let date = Date(timeIntervalSince1970: article.date)
-        let dateFormatter = DateFormatter()
         
-        dateFormatter.locale = NSLocale.current
-        dateFormatter.dateFormat = "MMMM dd yyyy"
-        let strDate = dateFormatter.string(from: date)
-        self.dateLabel.text = strDate
+        self.dateLabel.text = Date().getStringDateFromTimestamp(from: article.date)
         
-        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
-            guard let self = self else {return}
-            self.imageView.setImageFromDownloadURL(from: article.coverPhotoURL)
-        }
+        
+        self.imageView.setImageFromDownloadURL(from: article.coverPhotoURL)
+        
         
         
         
