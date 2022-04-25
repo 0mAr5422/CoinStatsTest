@@ -20,15 +20,32 @@ final class ReadFullArticleViewController : UIViewController {
     required init?(coder: NSCoder) {
         fatalError("failed to initalize coder for ReadFullArticleViewController")
     }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        textView = UITextView(frame: view.bounds)
-        textView.center = view.center
+        view.backgroundColor = .white
+        configureTextView()
+        
+        
+    }
+}
+
+//MARK: UI Configuration
+extension ReadFullArticleViewController {
+    private func configureTextView() {
+        textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(textView)
+        NSLayoutConstraint.activate([
+            textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor , constant: 10),
+            textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor , constant: -10),
+            textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor , constant: 0)
+        ])
         textView.textColor = .black
         textView.isEditable = false
         textView.font = UIFont.systemFont(ofSize: 26)
         textView.text = self.text
-        view.addSubview(textView)
-        
     }
 }

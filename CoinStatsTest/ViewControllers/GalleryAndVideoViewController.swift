@@ -89,7 +89,7 @@ extension GalleryAndVideoViewController {
                 groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(self.windowInterfaceOrientation?.isPortrait ?? true ?  0.3 : 0.6))
             case .descriptive:
                 itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(self.windowInterfaceOrientation?.isPortrait ?? true ?  0.4 : 0.7))
+                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(self.windowInterfaceOrientation?.isPortrait ?? true ?  0.6 : 0.8))
             }
             
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -140,8 +140,40 @@ extension GalleryAndVideoViewController {
     }
 }
 
-
+//MARK: UICollectionVIew Delegate
 extension GalleryAndVideoViewController : UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {return}
+        UIView.animate(withDuration: 0.2) {
+            cell.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        }
+    }
+        
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {return}
+        UIView.animate(withDuration: 0.2) {
+            cell.transform = .identity
+        }
+    }
     
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let _ = self.galleryItems {
+            guard let item = dataSource.itemIdentifier(for: indexPath) as? GalleryItem else {return}
+            let vc = ImageAndVideoViewController(with: item.contentURl, videoURL: nil)
+            
+            
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        if let _ = self.videoItems {
+            guard let item = dataSource.itemIdentifier(for: indexPath) as? VideoItem else {return}
+            let vc = ImageAndVideoViewController(with: nil, videoURL: "https://www.youtube.com/embed/" + item.youtubeID)
+            
+            
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        
+    }
 }

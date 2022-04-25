@@ -131,8 +131,8 @@ extension ArticlesFeedViewController : UICollectionViewDelegate {
         if
           let detailViewController = delegate as? ArticleDetailsViewController,
           let detailNavigationController = detailViewController.navigationController {
-            splitViewController?
-              .showDetailViewController(detailNavigationController, sender: nil)
+            detailNavigationController.popToRootViewController(animated: true)
+            splitViewController?.showDetailViewController(detailNavigationController, sender: nil)
         
         }
         
