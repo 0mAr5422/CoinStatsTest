@@ -22,6 +22,7 @@ final class GalleryAndVideoViewController : UIViewController {
     
     private var galleryItems : [GalleryItem]?
     private var videoItems : [VideoItem]?
+    
     init(with galleryItem : [GalleryItem]? , videoItem : [VideoItem]?) {
         self.galleryItems = galleryItem
         self.videoItems = videoItem
@@ -29,6 +30,9 @@ final class GalleryAndVideoViewController : UIViewController {
     }
     required init?(coder: NSCoder) {
         fatalError("failed to initalize coder for GalleryAndVideoViewController")
+    }
+    deinit {
+        print("deallocating GalleryView")
     }
     
     override func viewDidLoad() {
@@ -78,8 +82,8 @@ extension GalleryAndVideoViewController {
     }
     
     private func collectionViewLayout(layoutType : LayoutType) -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, environment in
-            
+        let layout = UICollectionViewCompositionalLayout {[weak self] sectionIndex, environment in
+            guard let self = self else {return nil}
             var itemSize : NSCollectionLayoutSize!
             var groupSize : NSCollectionLayoutSize!
             

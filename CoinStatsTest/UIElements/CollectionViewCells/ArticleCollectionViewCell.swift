@@ -12,6 +12,7 @@ final class ArticleCollectionViewCell : UICollectionViewCell {
     static let reuseIdentifier = "article-collection-view-cell-reuse-identifier"
     
     private var imageView : UIImageView! = nil
+    private var indicatorLabel : UILabel! = nil
     private var titleLabel : UILabel! = nil
     private var categoryLabel : UILabel! = nil
     private var dateLabel : UILabel! = nil
@@ -32,15 +33,16 @@ final class ArticleCollectionViewCell : UICollectionViewCell {
 extension ArticleCollectionViewCell {
         
     public func setupCell(with article : FeedArticle) {
+        
         self.titleLabel.text = article.title
         self.categoryLabel.text = article.category
-        
         
         self.dateLabel.text = Date().getStringDateFromTimestamp(from: article.date)
         
         
         self.imageView.setImageFromDownloadURL(from: article.coverPhotoURL)
-        
+        self.indicatorLabel.text = "New"
+        self.indicatorLabel.textColor = .systemGreen
         
         
         
@@ -53,6 +55,7 @@ extension ArticleCollectionViewCell {
         contentView.layer.shadowOffset = .zero
         contentView.layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds , cornerRadius: 10).cgPath
         configureImageView()
+        configureIndicatorLabel()
         configureTitleLabel()
         configureDateLabel()
         configureCategoryLabel()
@@ -75,10 +78,28 @@ extension ArticleCollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
-        imageView.addActivityIndicator()
-        
         
     }
+    private func configureIndicatorLabel(){
+        indicatorLabel = UILabel()
+        indicatorLabel.translatesAutoresizingMaskIntoConstraints = false
+        imageView.addSubview(indicatorLabel)
+        NSLayoutConstraint.activate([
+        
+            indicatorLabel.topAnchor.constraint(equalTo: imageView.topAnchor , constant: 10),
+            indicatorLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor , multiplier: 0.2),
+            indicatorLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor , constant: -10),
+            indicatorLabel.heightAnchor.constraint(equalTo: imageView.heightAnchor , multiplier: 0.2)
+            
+        ])
+        indicatorLabel.clipsToBounds = true
+        indicatorLabel.layer.cornerRadius = 10
+        indicatorLabel.backgroundColor = .systemGray6
+        indicatorLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        indicatorLabel.textAlignment = .center
+    }
+    
+    
     private func configureTitleLabel(){
         titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

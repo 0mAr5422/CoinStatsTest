@@ -7,12 +7,15 @@
 
 import UIKit
 
-private enum ArticleDetailsSections : String , CaseIterable {
+private enum ArticleDetailsSections :  Hashable{
+  
+    
     case coverImage
-    case title
+    case title(dateString:String)
     case body
     case gallery
     case videos
+    
     
 }
 
@@ -20,60 +23,55 @@ final class ArticleDetailsViewController : UIViewController {
     
     private var collectionView : UICollectionView! = nil
     private var dataSource : DDataSource<ArticleDetailsSections , AnyHashable>! = nil
-    private var article : FeedArticle!
+    private var barButtonItem : UIBarButtonItem! = nil
+    private var article : FeedArticle?{
+        didSet  {
+            updateViewController()
+        }
+    }
+      
+    
+    
+    
+    struct HashableTupleString : Hashable {
+        let identifier = UUID()
+        let first : String
+        let second : String
+    }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         view.backgroundColor = .white
-   
-        
-    }
-    
-   
-    
-    @objc private func handleRightBarButtonAction(_ sender : UIBarButtonItem){
-        UIPasteboard.general.string = sender.title
-        let alertAction = UIAlertController(title: "Copied", message: "share link copied", preferredStyle: .alert)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
-            alertAction.dismiss(animated: true, completion: nil)
-        }
-        present(alertAction, animated: true, completion: nil)
-    }
-    
-}
-
-
-// this extension contains the configureViewController Method that gets called from RootSplitViewController to initialize this view
-extension ArticleDetailsViewController {
-    public func configureViewController(){
-        
         configureCollectionView()
         configureDataSource()
-
+        configureBarButtonItem()
+        
+        
     }
-}
-
-
-extension ArticleDetailsViewController : ArticlesFeedViewControllerDelegate {
-    func handleArticleSelection(with article: FeedArticle) {
-        
-        self.article = article
-        
+    func updateViewController(){
         // will create a bar button that has only an image and set it's title to the share url so it can be accessed in the Selector
-        let button = UIBarButtonItem(image: UIImage(systemName: "square.on.square"), style: .plain, target: self, action: #selector(handleRightBarButtonAction(_:)))
-        button.title = article.shareURL
-        button.tintColor = .black
-        navigationItem.rightBarButtonItem = button
+
         
+        guard let article = article else {
+            return
+        }
+
+        if let _ = barButtonItem {
+        barButtonItem.title = article.shareURL
+        }
         var snap = NSDiffableDataSourceSnapshot<ArticleDetailsSections , AnyHashable>()
-        snap.appendSections([.coverImage , .title])
+        let titleSection = ArticleDetailsSections.title(dateString: Date().getStringDateFromTimestamp(from: article.date))
+        snap.appendSections([.coverImage , titleSection])
         snap.appendItems([
-            [article.coverPhotoURL , article.category]
+            HashableTupleString(first: article.coverPhotoURL, second: article.category)
         ], toSection: .coverImage)
+        
+        
         snap.appendItems([
-            [article.title , Date().getStringDateFromTimestamp(from: article.date)]
-        ], toSection: .title)
+            HashableTupleString(first: article.title, second: Date().getStringDateFromTimestamp(from: article.date))
+        ], toSection: titleSection)
+        
         if article.body != "" {
             snap.appendSections([.body])
             snap.appendItems([
@@ -84,32 +82,67 @@ extension ArticleDetailsViewController : ArticlesFeedViewControllerDelegate {
             snap.appendSections([.gallery])
             snap.appendItems(article.imagesGallery ?? [], toSection: .gallery)
         }
-        
+
         if article.videoGallery?.isEmpty == false {
             snap.appendSections([.videos])
             snap.appendItems(article.videoGallery ?? [], toSection: .videos)
         }
+
         
+        if let _ = dataSource {
+        dataSource.apply(snap,animatingDifferences: true)
+        }
+    }
+    
+    
+   
+    
+    @objc private func handleRightBarButtonAction(_ sender : UIBarButtonItem){
+        UIPasteboard.general.string = sender.title
+        let alertAction = UIAlertController(title: "Copied", message: "share link copied", preferredStyle: .alert)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
+            
+            alertAction.dismiss(animated: true, completion: nil)
+        }
+        present(alertAction, animated: true, completion: nil)
+       
         
+    }
+    
+}
+
+
+
+
+
+extension ArticleDetailsViewController : ArticlesFeedViewControllerDelegate {
+    func handleArticleSelection(with article: FeedArticle) {
         
-        dataSource.apply(snap)
+        self.article = article
+        
         
     }
     
     
 }
 
+//MARK: UI Configuration
 extension ArticleDetailsViewController {
     
+    private func configureBarButtonItem() {
+        barButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.on.square"), style: .plain, target: self, action: #selector(handleRightBarButtonAction(_:)))
+        
+        barButtonItem.tintColor = .black
+        navigationItem.rightBarButtonItem = barButtonItem
+    }
     
     private func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout {[weak self] sectionIndex, environment in
-            
+            guard let self = self else {return nil}
             var itemSize : NSCollectionLayoutSize! = nil
             var groupSize : NSCollectionLayoutSize! = nil
             
-            
-            
+        
             switch sectionIndex {
             case 0 :
                 itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
@@ -122,7 +155,7 @@ extension ArticleDetailsViewController {
                 groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.2))
             case 3 , 4 :
                 itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.25), heightDimension: .fractionalHeight(self?.windowInterfaceOrientation?.isPortrait ?? true ? 0.2 : 0.4))
+                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.25), heightDimension: .fractionalHeight(self.windowInterfaceOrientation?.isPortrait ?? true ? 0.2 : 0.4))
             default :
                 break
             }
@@ -147,11 +180,14 @@ extension ArticleDetailsViewController {
                 break
             case 1 :
                 section.boundarySupplementaryItems = [headerSupplementary]
+                break
             case 2 :
                 section.boundarySupplementaryItems = [headerSupplementary]
+                break
             case 3 , 4 :
                 section.orthogonalScrollingBehavior = .continuous
                 section.boundarySupplementaryItems = [headerSupplementary]
+                break
             default :
                 break
             }
@@ -179,18 +215,20 @@ extension ArticleDetailsViewController {
         dataSource = DDataSource
             <ArticleDetailsSections, AnyHashable>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: AnyHashable) -> UICollectionViewCell? in
-            
+//                guard let self = self else {return nil}
+                
+
                 switch indexPath.section {
                 case 0 :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoverImageCollectionViewCell.reuseIdentifier, for: indexPath) as? CoverImageCollectionViewCell else {return nil}
-                    guard let item = item as? [String] else {return nil}
-                    cell.setupCell(coverURL: item[0], category: item[1])
+                    guard let item = item as? HashableTupleString else {return nil}
+                    cell.setupCell(coverURL: item.first, category: item.second)
                     return cell
                 case 1  :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier, for: indexPath) as? TextHolderCollectionViewCell else {return nil}
-                    print(item)
-                    guard let item = item as? [String] else {return nil}
-                    cell.setupCell(with: item[0] , font: UIFont.boldSystemFont(ofSize: 24) )
+                    
+                    guard let item = item as? HashableTupleString else {return nil}
+                    cell.setupCell(with: item.first , font: UIFont.boldSystemFont(ofSize: 24) )
                     return cell
                 case 2 :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier, for: indexPath) as? TextHolderCollectionViewCell else {return nil}
@@ -218,13 +256,16 @@ extension ArticleDetailsViewController {
             guard let headerItem = self.collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ArticleDetailsSectionHeaderItem.reuseIdentifier, for: index) as? ArticleDetailsSectionHeaderItem else {return nil}
             
             headerItem.delegate = self
+            print("supplementaty" , index)
+
             switch index.section {
             case 0 :
                 return nil
             case 1 :
-                guard let item = self.dataSource.itemIdentifier(for: index) as? [String] else {return nil}
                 
-                headerItem.setupHeader(title: item[1] , buttonTitle: "")
+                guard let item = self.dataSource.itemIdentifier(for: index) as? HashableTupleString else {return nil}
+                headerItem.setupHeader(title: item.second , buttonTitle: "")
+                
                 return headerItem
             case 2 :
                 headerItem.setupHeader(title: "Article" , buttonTitle: "Read More")
@@ -291,15 +332,14 @@ extension ArticleDetailsViewController : ArticleDetailsSectionHeaderItemDelegate
     func handleViewAllAction(type: ViewAll) {
         switch type {
         case .videos :
-            let vc = GalleryAndVideoViewController(with: nil, videoItem: self.article.videoGallery)
+            let vc = GalleryAndVideoViewController(with: nil, videoItem: self.article?.videoGallery)
             navigationController?.pushViewController(vc, animated: true)
         
         case .images :
-            let vc = GalleryAndVideoViewController(with: self.article.imagesGallery, videoItem: nil)
+            let vc = GalleryAndVideoViewController(with: self.article?.imagesGallery, videoItem: nil)
             navigationController?.pushViewController(vc, animated: true)
         case .article :
-            let vc = ReadFullArticleViewController(with: self.article.body)
-            
+            let vc = ReadFullArticleViewController(with: self.article?.body ?? "")
             navigationController?.pushViewController(vc, animated: true)
             
         }

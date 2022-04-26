@@ -45,8 +45,8 @@ final class ArticlesFeedViewController: UIViewController {
                     snap.appendSections([.main])
                     snap.appendItems(model, toSection: .main)
                     self.dataSource.apply(snap)
-                    self.delegate?.handleArticleSelection(with: model.first!)
-                    
+                    guard let firstArticle = model.first else {return}
+                    self.delegate?.handleArticleSelection(with: firstArticle)
                 }
                 
             }
@@ -57,6 +57,13 @@ final class ArticlesFeedViewController: UIViewController {
     }
 
 }
+//extension ArticlesFeedViewController {
+//
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        collectionView.reloadData()
+//    }
+//}
 
 
 //MARK: UI Configuration
@@ -123,17 +130,17 @@ extension ArticlesFeedViewController {
 
 extension ArticlesFeedViewController : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        guard let article = dataSource.itemIdentifier(for: indexPath) else {return}
         
+        guard let article = dataSource.itemIdentifier(for: indexPath) else {return}
         delegate?.handleArticleSelection(with: article)
         
         if
           let detailViewController = delegate as? ArticleDetailsViewController,
           let detailNavigationController = detailViewController.navigationController {
+            
             detailNavigationController.popToRootViewController(animated: true)
-            splitViewController?.showDetailViewController(detailNavigationController, sender: nil)
-        
+            self.splitViewController?.showDetailViewController(detailNavigationController, sender: nil)
+            
         }
         
         

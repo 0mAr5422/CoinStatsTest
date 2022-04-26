@@ -13,7 +13,7 @@ enum ViewAll : String {
     case images
     case videos
 }
-protocol ArticleDetailsSectionHeaderItemDelegate {
+protocol ArticleDetailsSectionHeaderItemDelegate : AnyObject {
     func handleViewAllAction(type : ViewAll)
 }
 
@@ -21,7 +21,7 @@ final class ArticleDetailsSectionHeaderItem : UICollectionReusableView {
     static let reuseIdentifier = "article-details-section-header-item-reuse-identifier"
     private var viewAllButton : UIButton! = nil
     private var sectionTitleLabel : UILabel! = nil
-    public var delegate : ArticleDetailsSectionHeaderItemDelegate?
+    public weak var delegate : ArticleDetailsSectionHeaderItemDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
@@ -43,7 +43,7 @@ final class ArticleDetailsSectionHeaderItem : UICollectionReusableView {
         default :
             break
         }
-        
+
     }
 }
 

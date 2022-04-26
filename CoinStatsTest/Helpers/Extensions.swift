@@ -12,24 +12,14 @@ import UIKit
 //MARK: UIImageView
 extension UIImageView {
     
-    func enableZoom() {
-      let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(startZooming(_:)))
-      isUserInteractionEnabled = true
-      addGestureRecognizer(pinchGesture)
-    }
-
-    @objc
-    private func startZooming(_ sender: UIPinchGestureRecognizer) {
-      let scaleResult = sender.view?.transform.scaledBy(x: sender.scale, y: sender.scale)
-      guard let scale = scaleResult, scale.a > 1, scale.d > 1 else { return }
-      sender.view?.transform = scale
-      sender.scale = 1
-    }
-    
     // this function takes a stringURL and uses it to download an image
     // and uses the returned data to either display a place holder image or the downloaded image itself 
     func setImageFromDownloadURL(from stringURL : String) {
-        guard let url = URL(string: stringURL) else {return}
+        
+        addActivityIndicator()
+            
+        
+        guard let url = URL(string: stringURL) else {removeActivityIndicator();return}
         DispatchQueue.global(qos: .userInitiated).async {
             self.downloadImage(from: url) {[weak self] data, err in
                 guard let self = self else {return}
@@ -37,23 +27,26 @@ extension UIImageView {
                     // there was an error while retrieving the image data
                     // will set image to place holder image
                     // move to main queue to update ui
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async {[weak self] in
+                        guard let self = self else {return}
                         self.removeActivityIndicator()
-                        self.image = UIImage(systemName: "person.circle")
+                        self.image = UIImage(systemName: "wifi.slash")
                     }
                 }
                 guard let imageData = data else {
                     // data came back nill
                     // will set image to placeholder image
                     // move to main queue to update ui
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async {[weak self] in
+                        guard let self = self else {return}
                         self.removeActivityIndicator()
-                        self.image = UIImage(systemName: "person.circle")
+                        self.image = UIImage(systemName: "wifi.slash")
                     }
                     return
                 }
                 // move to main queue to update ImageView
-                DispatchQueue.main.async {
+                DispatchQueue.main.async {[weak self] in
+                    guard let self = self else {return}
                     // got image data successfully
                     self.image = UIImage(data: imageData)
                     self.removeActivityIndicator()
@@ -61,7 +54,7 @@ extension UIImageView {
                 }
             }
         }
-            
+//
         
         
     }

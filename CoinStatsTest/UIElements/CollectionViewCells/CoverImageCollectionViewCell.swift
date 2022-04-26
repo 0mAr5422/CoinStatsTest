@@ -27,8 +27,12 @@ final class CoverImageCollectionViewCell : UICollectionViewCell {
 //MARK: UI Configuration
 extension CoverImageCollectionViewCell {
     public func setupCell(coverURL : String , category : String) {
+        imageView.image = nil
         imageView.setImageFromDownloadURL(from: coverURL)
+        
+        
         categoryLabel.text = category
+        
     }
     
     private func configureImageView(){
@@ -46,7 +50,7 @@ extension CoverImageCollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
-        imageView.addActivityIndicator()
+        
         
         
     }

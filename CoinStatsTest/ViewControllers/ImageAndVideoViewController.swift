@@ -21,7 +21,22 @@ final class ImageAndVideoViewController : UIViewController , WKUIDelegate {
         self.videoURL = videoURL
         
         super.init(nibName: nil, bundle: nil)
-        
+        if let imageURL = imageURL {
+            configureScrollView()
+            
+            
+            imageView.setImageFromDownloadURL(from: imageURL)
+            
+            
+            return
+        }
+        if let videoURL = videoURL {
+            guard let url = URL(string: videoURL) else {return}
+            
+            let myRequest = URLRequest(url: url)
+            
+            webView.load(myRequest)
+        }
     }
     required init?(coder: NSCoder) {
         fatalError("failed to initalize ImageAndVideoViewController with coder")
@@ -29,19 +44,7 @@ final class ImageAndVideoViewController : UIViewController , WKUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        if let imageURL = imageURL {
-            configureScrollView()
-            
-            imageView.setImageFromDownloadURL(from: imageURL)
-            return
-        }
-        if let videoURL = videoURL {
-            guard let url = URL(string: videoURL) else {return}
-            
-            let myRequest = URLRequest(url: url)
-            print(myRequest)
-            webView.load(myRequest)
-        }
+        
         
         
     }
@@ -91,7 +94,7 @@ extension ImageAndVideoViewController {
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
         
-        imageView.addActivityIndicator()
+        
     }
 }
 extension ImageAndVideoViewController : UIScrollViewDelegate {

@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum ArticleReadStatus : String , Codable  {
+    case new = "New"
+    case read = "Read"
+    
+    
+}
 
 struct FeedResponseModel : Codable {
     let success : Bool
@@ -21,7 +27,19 @@ struct FeedResponseModel : Codable {
 }
 
 struct FeedArticle : Codable , Hashable {
+//    static func == (lhs: FeedArticle, rhs: FeedArticle) -> Bool {
+//        return lhs.identifier == rhs.identifier
+//    }
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(hashValue)
+//    }
+    
     let identifier = UUID()
+//    var status : ArticleReadStatus {
+//        get{ _status ?? .new}
+//        set{_status = newValue}
+//    }
+//    private var _status : ArticleReadStatus?
     let category : String
     let title : String
     let body : String
@@ -32,6 +50,7 @@ struct FeedArticle : Codable , Hashable {
     let videoGallery : [VideoItem]?
     
     enum CodingKeys : String , CodingKey {
+//        case _status
         case category
         case title
         case body
@@ -41,6 +60,10 @@ struct FeedArticle : Codable , Hashable {
         case imagesGallery = "gallery"
         case videoGallery = "video"
     }
+//    func markAsRead(){
+//        
+//        status = .read
+//    }
 }
 
 

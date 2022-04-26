@@ -34,7 +34,6 @@ extension GalleryAndVideoItemCollectionViewCell {
         nameLabel.text = galleryItem.title
         imageView.setImageFromDownloadURL(from: galleryItem.thumbnailURL)
         
-        
     }
     
     
@@ -55,7 +54,7 @@ extension GalleryAndVideoItemCollectionViewCell {
         
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
-        imageView.addActivityIndicator()
+        
       
     }
     private func configureNameLabel(){
