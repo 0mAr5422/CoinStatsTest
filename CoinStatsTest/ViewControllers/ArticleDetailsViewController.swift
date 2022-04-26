@@ -256,8 +256,7 @@ extension ArticleDetailsViewController {
             guard let headerItem = self.collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ArticleDetailsSectionHeaderItem.reuseIdentifier, for: index) as? ArticleDetailsSectionHeaderItem else {return nil}
             
             headerItem.delegate = self
-            print("supplementaty" , index)
-
+            
             switch index.section {
             case 0 :
                 return nil
