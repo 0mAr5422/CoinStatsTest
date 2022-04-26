@@ -21,6 +21,14 @@ final class ImageAndVideoViewController : UIViewController , WKUIDelegate {
         self.videoURL = videoURL
         
         super.init(nibName: nil, bundle: nil)
+        
+    }
+    required init?(coder: NSCoder) {
+        fatalError("failed to initalize ImageAndVideoViewController with coder")
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
         if let imageURL = imageURL {
             configureScrollView()
             
@@ -37,14 +45,6 @@ final class ImageAndVideoViewController : UIViewController , WKUIDelegate {
             
             webView.load(myRequest)
         }
-    }
-    required init?(coder: NSCoder) {
-        fatalError("failed to initalize ImageAndVideoViewController with coder")
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        
         
         
     }

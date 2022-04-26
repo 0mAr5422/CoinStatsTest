@@ -23,19 +23,20 @@ public class Reachability {
     public func startMonitoring(window : UIWindow?) {
         
         var isAcPresented = false
-        monitor.pathUpdateHandler = { path in
-            
+        monitor.pathUpdateHandler = {[weak self] path in
+            guard let self = self else {return}
             let ac = UIAlertController(title: "no internet connection", message: "try reconnecting", preferredStyle: .actionSheet)
             let topController = window?.rootViewController
-            
+        
             if path.status == .satisfied {
                 if isAcPresented == true {
                     topController?.dismiss(animated: true, completion: nil)
                     isAcPresented = false
+                    
                 }
-                
+                self.isConnected = true
             } else {
-                
+                self.isConnected = false
                 isAcPresented = true
                 topController?.dismiss(animated: true, completion: nil)
                 topController?.present(ac, animated: true, completion: nil)

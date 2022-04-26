@@ -13,15 +13,15 @@ enum ViewAll : String {
     case images
     case videos
 }
-protocol ArticleDetailsSectionHeaderItemDelegate : AnyObject {
+protocol ArticleDetailsSectionHeaderSupplementaryViewDelegate : AnyObject {
     func handleViewAllAction(type : ViewAll)
 }
 
-final class ArticleDetailsSectionHeaderItem : UICollectionReusableView {
+final class ArticleDetailsSectionHeaderSupplementaryView : UICollectionReusableView {
     static let reuseIdentifier = "article-details-section-header-item-reuse-identifier"
     private var viewAllButton : UIButton! = nil
     private var sectionTitleLabel : UILabel! = nil
-    public weak var delegate : ArticleDetailsSectionHeaderItemDelegate?
+    public weak var delegate : ArticleDetailsSectionHeaderSupplementaryViewDelegate?
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
@@ -47,10 +47,17 @@ final class ArticleDetailsSectionHeaderItem : UICollectionReusableView {
     }
 }
 
-extension ArticleDetailsSectionHeaderItem {
+//MARK: UI Configuration
+extension ArticleDetailsSectionHeaderSupplementaryView {
     public func setupHeader(title : String , buttonTitle : String) {
         sectionTitleLabel.text = title
         viewAllButton.setTitle(buttonTitle, for: .normal)
+        if buttonTitle == ""{
+            viewAllButton.isUserInteractionEnabled = false
+        }
+        else {
+            viewAllButton.isUserInteractionEnabled = true
+        }
         
     }
     

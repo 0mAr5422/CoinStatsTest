@@ -94,10 +94,14 @@ extension UIView {
     func addActivityIndicator() {
         
         
-        
+        if let activityIndicatorView = viewWithTag(475647){
+            activityIndicatorView.removeFromSuperview()
+        }
         
         let activityIndicator = UIActivityIndicatorView()
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        activityIndicator.tag = 475647
         self.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             
@@ -111,7 +115,7 @@ extension UIView {
         activityIndicator.hidesWhenStopped = true
         activityIndicator.style = .large
         activityIndicator.startAnimating()
-        activityIndicator.tag = 475647
+        
         self.isUserInteractionEnabled = false
         
         

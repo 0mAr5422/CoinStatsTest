@@ -22,6 +22,11 @@ private enum ArticleDetailsSections :  Hashable{
 final class ArticleDetailsViewController : UIViewController {
     
     private var collectionView : UICollectionView! = nil
+    // since we have multiple sections we will use AnyHashable for the items
+    // that menas that only items that conform to Hashable can be used
+    // we will be able to case the item to the type that best fits the section
+    // example :
+    //      guard let item = itemIdentifier as? FeedArticle else {return}
     private var dataSource : DDataSource<ArticleDetailsSections , AnyHashable>! = nil
     private var barButtonItem : UIBarButtonItem! = nil
     private var article : FeedArticle?{
@@ -32,7 +37,7 @@ final class ArticleDetailsViewController : UIViewController {
       
     
     
-    
+    // custome type to hold value for out datasource items
     struct HashableTupleString : Hashable {
         let identifier = UUID()
         let first : String
@@ -50,15 +55,12 @@ final class ArticleDetailsViewController : UIViewController {
         
     }
     func updateViewController(){
-        // will create a bar button that has only an image and set it's title to the share url so it can be accessed in the Selector
-
-        
         guard let article = article else {
             return
         }
 
         if let _ = barButtonItem {
-        barButtonItem.title = article.shareURL
+            barButtonItem.title = article.shareURL
         }
         var snap = NSDiffableDataSourceSnapshot<ArticleDetailsSections , AnyHashable>()
         let titleSection = ArticleDetailsSections.title(dateString: Date().getStringDateFromTimestamp(from: article.date))
@@ -72,17 +74,19 @@ final class ArticleDetailsViewController : UIViewController {
             HashableTupleString(first: article.title, second: Date().getStringDateFromTimestamp(from: article.date))
         ], toSection: titleSection)
         
+        // if article doesn't have a body no body section will be added
         if article.body != "" {
             snap.appendSections([.body])
             snap.appendItems([
                 article.body
             ], toSection: .body)
         }
+        // if article doesn't have any images no images section will be added
         if article.imagesGallery?.isEmpty == false {
             snap.appendSections([.gallery])
             snap.appendItems(article.imagesGallery ?? [], toSection: .gallery)
         }
-
+        // if article doesn't have any videos no videos section will be added
         if article.videoGallery?.isEmpty == false {
             snap.appendSections([.videos])
             snap.appendItems(article.videoGallery ?? [], toSection: .videos)
@@ -90,7 +94,7 @@ final class ArticleDetailsViewController : UIViewController {
 
         
         if let _ = dataSource {
-        dataSource.apply(snap,animatingDifferences: true)
+            dataSource.apply(snap,animatingDifferences: true)
         }
     }
     
@@ -100,11 +104,12 @@ final class ArticleDetailsViewController : UIViewController {
     @objc private func handleRightBarButtonAction(_ sender : UIBarButtonItem){
         UIPasteboard.general.string = sender.title
         let alertAction = UIAlertController(title: "Copied", message: "share link copied", preferredStyle: .alert)
+        // makr the alrtAction disappear after 1.5 seconds
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1500)) {
             
             alertAction.dismiss(animated: true, completion: nil)
         }
-        present(alertAction, animated: true, completion: nil)
+        self.navigationController?.present(alertAction, animated: true, completion: nil)
        
         
     }
@@ -114,13 +119,10 @@ final class ArticleDetailsViewController : UIViewController {
 
 
 
-
+// MARK: ArticlesFeedViewControllerDelegate Methods
 extension ArticleDetailsViewController : ArticlesFeedViewControllerDelegate {
     func handleArticleSelection(with article: FeedArticle) {
-        
         self.article = article
-        
-        
     }
     
     
@@ -160,7 +162,7 @@ extension ArticleDetailsViewController {
                 break
             }
             
-            
+            // self.windowInterfaceOrientation is a computed property added to an extension to UIViewController in Helpers/Extensions
             
             
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -207,7 +209,7 @@ extension ArticleDetailsViewController {
         collectionView.register(TextHolderCollectionViewCell.self, forCellWithReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier)
         collectionView.register(CoverImageCollectionViewCell.self, forCellWithReuseIdentifier: CoverImageCollectionViewCell.reuseIdentifier)
         collectionView.register(GalleryAndVideoItemCollectionViewCell.self, forCellWithReuseIdentifier: GalleryAndVideoItemCollectionViewCell.reuseIdentifier)
-        collectionView.register(ArticleDetailsSectionHeaderItem.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ArticleDetailsSectionHeaderItem.reuseIdentifier)
+        collectionView.register(ArticleDetailsSectionHeaderSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ArticleDetailsSectionHeaderSupplementaryView.reuseIdentifier)
     }
     
     private func configureDataSource(){
@@ -215,7 +217,7 @@ extension ArticleDetailsViewController {
         dataSource = DDataSource
             <ArticleDetailsSections, AnyHashable>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: AnyHashable) -> UICollectionViewCell? in
-//                guard let self = self else {return nil}
+
                 
 
                 switch indexPath.section {
@@ -228,13 +230,13 @@ extension ArticleDetailsViewController {
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier, for: indexPath) as? TextHolderCollectionViewCell else {return nil}
                     
                     guard let item = item as? HashableTupleString else {return nil}
-                    cell.setupCell(with: item.first , font: UIFont.boldSystemFont(ofSize: 24) )
+                    cell.setupCell(body: item.first , font: UIFont.boldSystemFont(ofSize: 24) )
                     return cell
                 case 2 :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextHolderCollectionViewCell.reuseIdentifier, for: indexPath) as? TextHolderCollectionViewCell else {return nil}
                     
                     guard let item = item as? String else {return nil}
-                    cell.setupCell(with: item , font:  UIFont.systemFont(ofSize: 16) )
+                    cell.setupCell(body: item , font:  UIFont.systemFont(ofSize: 16) )
                     return cell
                 case 3 :
                     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GalleryAndVideoItemCollectionViewCell.reuseIdentifier, for: indexPath) as? GalleryAndVideoItemCollectionViewCell else {return nil}
@@ -253,8 +255,8 @@ extension ArticleDetailsViewController {
         }
         dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
             guard let self = self else {return nil}
-            guard let headerItem = self.collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ArticleDetailsSectionHeaderItem.reuseIdentifier, for: index) as? ArticleDetailsSectionHeaderItem else {return nil}
-            
+            guard let headerItem = self.collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ArticleDetailsSectionHeaderSupplementaryView.reuseIdentifier, for: index) as? ArticleDetailsSectionHeaderSupplementaryView else {return nil}
+            // we set ourself as headerItem.delegate to ensure we control what happens when view all button from ArticleSectionHeaderSupplementaryView gets tapped
             headerItem.delegate = self
             
             switch index.section {
@@ -306,19 +308,21 @@ extension ArticleDetailsViewController : UICollectionViewDelegate {
         if indexPath.section == 3 {
             guard let item = dataSource.itemIdentifier(for: indexPath) as? GalleryItem else {return}
             let vc = ImageAndVideoViewController(with: item.contentURl, videoURL: nil)
-            navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.section == 4 {
             guard let item = dataSource.itemIdentifier(for: indexPath) as? VideoItem else {return}
+            // video doesn't want to play in embeded
+            // maybe because video is old
             let vc = ImageAndVideoViewController(with: nil , videoURL: "https://www.youtube.com/embed/" + item.youtubeID)
-            navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
 
 // this extension contains the required ArticleDetailsSectionHeaderItemDelegate Methods
 
-extension ArticleDetailsViewController : ArticleDetailsSectionHeaderItemDelegate {
+extension ArticleDetailsViewController : ArticleDetailsSectionHeaderSupplementaryViewDelegate {
     
     
     

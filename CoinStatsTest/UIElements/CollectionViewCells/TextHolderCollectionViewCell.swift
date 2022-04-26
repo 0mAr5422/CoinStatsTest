@@ -24,8 +24,8 @@ final class TextHolderCollectionViewCell : UICollectionViewCell {
 //MARK: UI Configuration
 
 extension TextHolderCollectionViewCell {
-    public func setupCell(with text : String , font : UIFont ) {
-        textView.text = text
+    public func setupCell(body : String , font : UIFont ) {
+        textView.text = body
         textView.font = font
     }
     private func configureContentView(){

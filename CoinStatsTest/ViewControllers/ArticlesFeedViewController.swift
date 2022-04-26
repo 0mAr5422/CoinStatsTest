@@ -15,7 +15,7 @@ protocol ArticlesFeedViewControllerDelegate : AnyObject {
 final class ArticlesFeedViewController: UIViewController {
     private var collectionView : UICollectionView! = nil
     private var dataSource : DDataSource<FeedArticleSections,FeedArticle>! = nil
-    
+    private var feedViewModel = FeedViewModel()
     public weak var delegate : ArticlesFeedViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,16 +24,22 @@ final class ArticlesFeedViewController: UIViewController {
         title = "Articles"
         view.backgroundColor = .systemGray6
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gobackward"), style: .plain, target: self, action: #selector(handleLeftBarButtonItemAction(_:)))
         configureRightBarButtonItem()
         configureCollectionView()
         configureDataSource()
         
-        let feedViewModel = FeedViewModel()
-        self.view.addActivityIndicator()
+        
+        
         view.backgroundColor = .blue
-        DispatchQueue.global(qos: .userInitiated).async {
-
-            feedViewModel.performDataFetch(with: [:]) {[weak self] model, err in
+        
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+            guard let self = self else {return}
+            DispatchQueue.main.async {[weak self] in
+                guard let self = self else {return}
+                self.view.addActivityIndicator()
+            }
+            self.feedViewModel.performDataFetch(with: [:]) {[weak self] model, err in
                 guard let self = self else {return}
             if let _ = err {
                 print(err)
@@ -48,13 +54,47 @@ final class ArticlesFeedViewController: UIViewController {
                     self.dataSource.apply(snap)
                     guard let firstArticle = model.first else {return}
                     self.delegate?.handleArticleSelection(with: firstArticle)
+                    self.view.removeActivityIndicator()
                 }
                 
             }
             }
         }
+    
+    
+
+       
         
         
+    }
+    @objc private func handleLeftBarButtonItemAction(_ sender : UIBarButtonItem){
+        sender.isEnabled = false
+        self.view.addActivityIndicator()
+        DispatchQueue.global(qos: .userInitiated).async {[weak self] in
+            guard let self = self else {return}
+            
+            self.feedViewModel.performDataFetch(with: [:]) {[weak self] model, err in
+                guard let self = self else {return}
+            if let _ = err {
+                print(err)
+                return
+            }
+            else {
+                DispatchQueue.main.async {
+                    self.view.removeActivityIndicator()
+                    var snap = NSDiffableDataSourceSnapshot<FeedArticleSections , FeedArticle>()
+                    snap.appendSections([.main])
+                    snap.appendItems(model, toSection: .main)
+                    self.dataSource.apply(snap)
+                    guard let firstArticle = model.first else {return}
+                    self.delegate?.handleArticleSelection(with: firstArticle)
+                    sender.isEnabled = true
+                    self.view.removeActivityIndicator()
+                }
+                
+            }
+            }
+        }
     }
     @objc private func handleRightBarButtonItemAction(){
         ReadHistoryManager.shared.deleteHistory()

@@ -42,12 +42,11 @@ extension ArticleCollectionViewCell {
         
         self.imageView.setImageFromDownloadURL(from: article.coverPhotoURL)
         if ReadHistoryManager.shared.isRead(articleShareURL: article.shareURL) {
-            self.indicatorLabel.text = "Read"
-            self.indicatorLabel.textColor = .black
+            self.indicatorLabel.attributedText = NSAttributedString(string: "Read", attributes: [.strikethroughColor : UIColor.lightGray , .strikethroughStyle : NSUnderlineStyle.double.rawValue , .foregroundColor : UIColor.black])
+            
         }
         else {
-            self.indicatorLabel.text = "New"
-            self.indicatorLabel.textColor = .systemGreen
+            self.indicatorLabel.attributedText = NSAttributedString(string: "New", attributes:[.foregroundColor : UIColor.systemGreen])
         }
         
         

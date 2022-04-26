@@ -43,9 +43,11 @@ extension ReadFullArticleViewController {
             textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor , constant: -10),
             textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor , constant: 0)
         ])
+        
         textView.textColor = .black
         textView.isEditable = false
         textView.font = UIFont.systemFont(ofSize: 26)
         textView.text = self.text
+        textView.backgroundColor = .white
     }
 }
