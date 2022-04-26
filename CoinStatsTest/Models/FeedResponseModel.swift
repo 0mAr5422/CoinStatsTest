@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum ArticleReadStatus : String , Codable  {
+    case new = "New"
+    case read = "Read"
+    
+    
+}
 
 struct FeedResponseModel : Codable {
     let success : Bool
@@ -21,7 +27,9 @@ struct FeedResponseModel : Codable {
 }
 
 struct FeedArticle : Codable , Hashable {
+
     let identifier = UUID()
+
     let category : String
     let title : String
     let body : String
@@ -32,6 +40,7 @@ struct FeedArticle : Codable , Hashable {
     let videoGallery : [VideoItem]?
     
     enum CodingKeys : String , CodingKey {
+//        case _status
         case category
         case title
         case body
@@ -41,6 +50,7 @@ struct FeedArticle : Codable , Hashable {
         case imagesGallery = "gallery"
         case videoGallery = "video"
     }
+
 }
 
 
