@@ -27,19 +27,9 @@ struct FeedResponseModel : Codable {
 }
 
 struct FeedArticle : Codable , Hashable {
-//    static func == (lhs: FeedArticle, rhs: FeedArticle) -> Bool {
-//        return lhs.identifier == rhs.identifier
-//    }
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(hashValue)
-//    }
-    
+
     let identifier = UUID()
-//    var status : ArticleReadStatus {
-//        get{ _status ?? .new}
-//        set{_status = newValue}
-//    }
-//    private var _status : ArticleReadStatus?
+
     let category : String
     let title : String
     let body : String
@@ -60,10 +50,7 @@ struct FeedArticle : Codable , Hashable {
         case imagesGallery = "gallery"
         case videoGallery = "video"
     }
-//    func markAsRead(){
-//        
-//        status = .read
-//    }
+
 }
 
 

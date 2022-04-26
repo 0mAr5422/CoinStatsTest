@@ -15,48 +15,60 @@ extension UIImageView {
     // this function takes a stringURL and uses it to download an image
     // and uses the returned data to either display a place holder image or the downloaded image itself 
     func setImageFromDownloadURL(from stringURL : String) {
-        
+        self.image = nil
+        self.backgroundColor = .white
         addActivityIndicator()
-            
-        
-        guard let url = URL(string: stringURL) else {removeActivityIndicator();return}
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.downloadImage(from: url) {[weak self] data, err in
+        if let image = ImageCache.shared.image(forKey: stringURL) {
+            DispatchQueue.main.async {[weak self] in
                 guard let self = self else {return}
-                if let _ = err {
-                    // there was an error while retrieving the image data
-                    // will set image to place holder image
-                    // move to main queue to update ui
-                    DispatchQueue.main.async {[weak self] in
-                        guard let self = self else {return}
-                        self.removeActivityIndicator()
-                        self.image = UIImage(systemName: "wifi.slash")
-                    }
-                }
-                guard let imageData = data else {
-                    // data came back nill
-                    // will set image to placeholder image
-                    // move to main queue to update ui
-                    DispatchQueue.main.async {[weak self] in
-                        guard let self = self else {return}
-                        self.removeActivityIndicator()
-                        self.image = UIImage(systemName: "wifi.slash")
-                    }
-                    return
-                }
-                // move to main queue to update ImageView
-                DispatchQueue.main.async {[weak self] in
+                self.removeActivityIndicator()
+                self.image = image
+                print("found image in cache")
+            }
+            
+        }
+        else {
+            guard let url = URL(string: stringURL) else {removeActivityIndicator();return}
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.downloadImage(from: url) {[weak self] data, err in
                     guard let self = self else {return}
-                    // got image data successfully
-                    self.image = UIImage(data: imageData)
-                    self.removeActivityIndicator()
-                    
+                    if let _ = err {
+                        // there was an error while retrieving the image data
+                        // will set image to place holder image
+                        // move to main queue to update ui
+                        DispatchQueue.main.async {[weak self] in
+                            guard let self = self else {return}
+                            self.removeActivityIndicator()
+                            self.image = UIImage(systemName: "wifi.slash")
+                        }
+                    }
+                    guard let imageData = data else {
+                        // data came back nill
+                        // will set image to placeholder image
+                        // move to main queue to update ui
+                        DispatchQueue.main.async {[weak self] in
+                            guard let self = self else {return}
+                            self.removeActivityIndicator()
+                            self.image = UIImage(systemName: "wifi.slash")
+                        }
+                        return
+                    }
+                    // move to main queue to update ImageView
+                    DispatchQueue.main.async {[weak self] in
+                        guard let self = self else {return}
+                        // got image data successfully
+                        guard let image = UIImage(data: imageData) else {return}
+                        self.image = image
+                        // add UIImage to the cache for later use
+                        ImageCache.shared.set(image, forKey: stringURL)
+                        print("added downloaded image to cache")
+                        self.removeActivityIndicator()
+                        
+                    }
                 }
             }
         }
-//
-        
-        
+    
     }
     
     private func downloadImage(from url : URL , completion : @escaping (Data? , ServiceError?) -> ()) {
