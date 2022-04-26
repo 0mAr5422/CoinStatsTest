@@ -24,6 +24,7 @@ final class ArticlesFeedViewController: UIViewController {
         title = "Articles"
         view.backgroundColor = .systemGray6
         
+        configureRightBarButtonItem()
         configureCollectionView()
         configureDataSource()
         
@@ -55,6 +56,20 @@ final class ArticlesFeedViewController: UIViewController {
         
         
     }
+    @objc private func handleRightBarButtonItemAction(){
+        ReadHistoryManager.shared.deleteHistory()
+        let ac = UIAlertController(title: "Success", message: "History has been removed", preferredStyle: .alert)
+        self.navigationController?.present(ac, animated: true, completion: nil)
+        // updating the collection view using the snapshot API
+        var snap = dataSource.snapshot()
+        snap.reloadItems(snap.itemIdentifiers)
+        dataSource.apply(snap)
+        // after 1 second dismiss ac
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {
+            
+            ac.dismiss(animated: true, completion: nil)
+        }
+    }
 
 }
 //extension ArticlesFeedViewController {
@@ -69,6 +84,12 @@ final class ArticlesFeedViewController: UIViewController {
 //MARK: UI Configuration
 
 extension ArticlesFeedViewController {
+    
+    //MARK: right bar button item
+    private func configureRightBarButtonItem(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .done, target: self, action: #selector(handleRightBarButtonItemAction))
+        navigationItem.rightBarButtonItem?.tintColor = .black
+    }
     
     //MARK: Compositional layout configuration
     
@@ -133,7 +154,11 @@ extension ArticlesFeedViewController : UICollectionViewDelegate {
         
         guard let article = dataSource.itemIdentifier(for: indexPath) else {return}
         delegate?.handleArticleSelection(with: article)
-        
+        ReadHistoryManager.shared.markArticleAsRead(articleShareURL: article.shareURL)
+        //updating the collection view with the snapshot API
+        var snap = dataSource.snapshot()
+        snap.reloadItems([article])
+        dataSource.apply(snap)
         if
           let detailViewController = delegate as? ArticleDetailsViewController,
           let detailNavigationController = detailViewController.navigationController {

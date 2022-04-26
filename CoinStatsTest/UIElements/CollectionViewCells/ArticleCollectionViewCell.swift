@@ -41,9 +41,14 @@ extension ArticleCollectionViewCell {
         
         
         self.imageView.setImageFromDownloadURL(from: article.coverPhotoURL)
-        self.indicatorLabel.text = "New"
-        self.indicatorLabel.textColor = .systemGreen
-        
+        if ReadHistoryManager.shared.isRead(articleShareURL: article.shareURL) {
+            self.indicatorLabel.text = "Read"
+            self.indicatorLabel.textColor = .black
+        }
+        else {
+            self.indicatorLabel.text = "New"
+            self.indicatorLabel.textColor = .systemGreen
+        }
         
         
     }
